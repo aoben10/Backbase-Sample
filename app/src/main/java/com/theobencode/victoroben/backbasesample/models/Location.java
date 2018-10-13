@@ -36,15 +36,18 @@ public class Location {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof Location)) return false;
-        Location location = (Location) o;
-        return id == location.id;
+        final Location location = (Location) o;
+        return id == location.id &&
+                Objects.equals(country, location.country) &&
+                Objects.equals(coord, location.coord) &&
+                Objects.equals(cityName, location.cityName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(country, coord, cityName, id);
     }
 }
