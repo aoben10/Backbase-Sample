@@ -2,4 +2,6 @@
     <string name="app_name">BackbaseSample</string>
     <string name="action_search">Search</string>
     <string name="city_country_text">%1$s, %2$s</string>
+    <string name="location_list_size">List count: %1$d</string>
+    <string name="oops_no_matches_found">Oops! No matches found :_(</string>
 </resources>

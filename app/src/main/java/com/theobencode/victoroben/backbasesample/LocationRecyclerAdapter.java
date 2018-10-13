@@ -4,15 +4,21 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
+
 import com.theobencode.victoroben.backbasesample.databinding.ListItemLocationBinding;
 import com.theobencode.victoroben.backbasesample.models.Location;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecyclerAdapter.LocationViewHolder> {
+public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecyclerAdapter.LocationViewHolder> implements Filterable {
 
     private final SortedList<Location> sortedLocations = new SortedList<>(Location.class, new SortedList.Callback<Location>() {
 
@@ -53,6 +59,9 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     });
 
     private final Comparator<Location> comparator;
+    @NonNull
+    private List<Location> originalLocationsList = Collections.emptyList();
+    private LocationFilter locationFilter;
 
     LocationRecyclerAdapter(final Comparator<Location> comparator) {
         this.comparator = comparator;
@@ -60,6 +69,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
     public void setData(final List<Location> newData) {
         sortedLocations.addAll(newData);
+        originalLocationsList = Collections.unmodifiableList(new ArrayList<>(newData));
     }
 
     @NonNull
@@ -79,6 +89,59 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     @Override
     public int getItemCount() {
         return sortedLocations.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (locationFilter == null) {
+            locationFilter = new LocationFilter();
+        }
+        return locationFilter;
+    }
+
+    private class LocationFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(final CharSequence query) {
+            final FilterResults finalResults = new FilterResults();
+
+            final List<Location> filteredLocations;
+
+            if (TextUtils.isEmpty(query)) {
+                //if search text is empty, then return the original array
+                filteredLocations = originalLocationsList;
+            } else {
+                filteredLocations = new ArrayList<>();
+                final String lowerCaseQuery = query.toString().toLowerCase();
+                for (int i = 0; i < originalLocationsList.size(); i++) {
+                    final Location location = originalLocationsList.get(i);
+
+                    final String cityName = location.getCityName().toLowerCase();
+                    if (cityName.startsWith(lowerCaseQuery)) {
+                        filteredLocations.add(location);
+                    }
+                }
+
+            }
+
+            finalResults.values = filteredLocations;
+            finalResults.count = filteredLocations.size();
+
+            return finalResults;
+        }
+
+        @Override
+        protected void publishResults(final CharSequence constraint, final FilterResults results) {
+            replaceAll((List<Location>) results.values);
+        }
+
+        private void replaceAll(final List<Location> filteredLocations) {
+            sortedLocations.beginBatchedUpdates();
+            sortedLocations.clear();
+            sortedLocations.addAll(filteredLocations);
+            sortedLocations.endBatchedUpdates();
+        }
+
     }
 
     static class LocationViewHolder extends RecyclerView.ViewHolder {
