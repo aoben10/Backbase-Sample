@@ -40,6 +40,7 @@ public class Location {
         if (this == o) return true;
         if (!(o instanceof Location)) return false;
         final Location location = (Location) o;
+        // TODO - Fix these issues
         return id == location.id &&
                 Objects.equals(country, location.country) &&
                 Objects.equals(coord, location.coord) &&

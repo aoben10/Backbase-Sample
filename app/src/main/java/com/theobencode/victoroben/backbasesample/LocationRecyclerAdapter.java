@@ -51,6 +51,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             return item1.getId() == item2.getId();
         }
     });
+
     private final Comparator<Location> comparator;
 
     LocationRecyclerAdapter(final Comparator<Location> comparator) {
@@ -65,7 +66,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     @Override
     public LocationViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int position) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        final ListItemLocationBinding listItemLocationBinding = DataBindingUtil.inflate(inflater, R.layout.list_item_location, parent, true);
+        final ListItemLocationBinding listItemLocationBinding = DataBindingUtil.inflate(inflater, R.layout.list_item_location, parent, false);
         return new LocationViewHolder(listItemLocationBinding);
     }
 
