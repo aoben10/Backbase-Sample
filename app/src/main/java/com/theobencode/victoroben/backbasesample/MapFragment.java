@@ -64,7 +64,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return mapFragment;
     }
 
-
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         final LatLng city = new LatLng(latitude, longitude);

@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
+
 public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecyclerAdapter.LocationViewHolder> implements Filterable {
 
     private final SortedList<Location> sortedLocations = new SortedList<>(Location.class, new SortedList.Callback<Location>() {
@@ -80,8 +82,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         final ListItemLocationBinding listItemLocationBinding = DataBindingUtil.inflate(inflater, R.layout.list_item_location, parent, false);
         final LocationViewHolder locationViewHolder = new LocationViewHolder(listItemLocationBinding);
         listItemLocationBinding.setOnLocationClick(v -> {
-            final Location location = sortedLocations.get(locationViewHolder.getAdapterPosition());
-            locationClickListener.onLocationClick(location);
+            final int pos = locationViewHolder.getAdapterPosition();
+            if (pos != NO_POSITION) {
+                final Location location = sortedLocations.get(pos);
+                locationClickListener.onLocationClick(location);
+            }
         });
         return locationViewHolder;
     }

@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -28,6 +26,7 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
     private Gson gson;
     private LocationRecyclerAdapter locationRecyclerAdapter;
     public static final String EXTRA_STATE_FILTER_QUERY = "EXTRA_FILTER_QUERY";
+    public static final String FRAGMENT_TAG_MAP_FRAGMENT = "MAP_FRAGMENT";
 
     private CharSequence filterQuery;
 
@@ -59,16 +58,6 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setHomeButtonEnabled(false);
-        }
-    }
-
     private void onCityJsonDataReceived(final String citiesJsonString) {
         if (gson != null) {
             final List<Location> locationList = gson.fromJson(citiesJsonString, new TypeToken<List<Location>>() {
@@ -87,11 +76,13 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         final double latitude = location.getCoord().getLatitude();
         final double longitude = location.getCoord().getLongitude();
 
-        getFragmentManager() // TODO - Move this to activity, maybe
-                .beginTransaction()
-                .replace(R.id.fragment_container, MapFragment.newInstance(latitude, longitude), "MapFragment")
-                .addToBackStack("MapFragment")
-                .commit();
+        if (getFragmentManager() != null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, MapFragment.newInstance(latitude, longitude), FRAGMENT_TAG_MAP_FRAGMENT)
+                    .addToBackStack(FRAGMENT_TAG_MAP_FRAGMENT)
+                    .commit();
+        }
     }
 
     @Override
