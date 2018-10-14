@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-
 import com.theobencode.victoroben.backbasesample.databinding.ListItemLocationBinding;
 import com.theobencode.victoroben.backbasesample.models.Location;
 
@@ -58,13 +57,15 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         }
     });
 
+    private final LocationClickListener locationClickListener;
     private final Comparator<Location> comparator;
     @NonNull
     private List<Location> originalLocationsList = Collections.emptyList();
     private LocationFilter locationFilter;
 
-    LocationRecyclerAdapter(final Comparator<Location> comparator) {
+    LocationRecyclerAdapter(final LocationClickListener locationClickListener, final Comparator<Location> comparator) {
         this.comparator = comparator;
+        this.locationClickListener = locationClickListener;
     }
 
     public void setData(final List<Location> newData) {
@@ -77,7 +78,12 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     public LocationViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int position) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final ListItemLocationBinding listItemLocationBinding = DataBindingUtil.inflate(inflater, R.layout.list_item_location, parent, false);
-        return new LocationViewHolder(listItemLocationBinding);
+        final LocationViewHolder locationViewHolder = new LocationViewHolder(listItemLocationBinding);
+        listItemLocationBinding.setOnLocationClick(v -> {
+            final Location location = sortedLocations.get(locationViewHolder.getAdapterPosition());
+            locationClickListener.onLocationClick(location);
+        });
+        return locationViewHolder;
     }
 
     @Override
@@ -152,5 +158,9 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    interface LocationClickListener {
+        void onLocationClick(Location location);
     }
 }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -19,7 +21,7 @@ import com.theobencode.victoroben.backbasesample.models.Location;
 import java.util.Comparator;
 import java.util.List;
 
-public class LocationListFragment extends Fragment implements Filter.FilterListener {
+public class LocationListFragment extends Fragment implements Filter.FilterListener, LocationRecyclerAdapter.LocationClickListener {
 
     FragmentLocationListBinding binding;
     @Nullable
@@ -45,7 +47,7 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         setHasOptionsMenu(true);
         binding.progressCircular.setVisibility(View.VISIBLE);
         gson = new Gson();
-        locationRecyclerAdapter = new LocationRecyclerAdapter(ALPHABETICAL_CITY_NAME_COMPARATOR);
+        locationRecyclerAdapter = new LocationRecyclerAdapter(this, ALPHABETICAL_CITY_NAME_COMPARATOR);
         binding.locationRecyclerView.setAdapter(locationRecyclerAdapter);
         binding.locationRecyclerView
                 .addItemDecoration(new DividerItemDecoration(binding.locationRecyclerView.getContext(),
@@ -54,6 +56,16 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         onCityJsonDataReceived(LocationUtils.getCitiesJsonString());
         if (savedInstanceState != null) {
             filterQuery = savedInstanceState.getCharSequence(EXTRA_STATE_FILTER_QUERY);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setHomeButtonEnabled(false);
         }
     }
 
@@ -68,6 +80,18 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
             }
         }
         binding.progressCircular.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLocationClick(final Location location) {
+        final double latitude = location.getCoord().getLatitude();
+        final double longitude = location.getCoord().getLongitude();
+
+        getFragmentManager() // TODO - Move this to activity, maybe
+                .beginTransaction()
+                .replace(R.id.fragment_container, MapFragment.newInstance(latitude, longitude), "MapFragment")
+                .addToBackStack("MapFragment")
+                .commit();
     }
 
     @Override
