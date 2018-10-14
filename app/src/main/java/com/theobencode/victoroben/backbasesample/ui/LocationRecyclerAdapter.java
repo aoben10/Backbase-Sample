@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -12,6 +11,7 @@ import android.widget.Filterable;
 import com.theobencode.victoroben.backbasesample.R;
 import com.theobencode.victoroben.backbasesample.databinding.ListItemLocationBinding;
 import com.theobencode.victoroben.backbasesample.models.Location;
+import com.theobencode.victoroben.backbasesample.utils.LocationUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,25 +117,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         protected FilterResults performFiltering(final CharSequence query) {
             final FilterResults finalResults = new FilterResults();
 
-            final List<Location> filteredLocations;
-
-            if (TextUtils.isEmpty(query)) {
-                //if search text is empty, then return the original array
-                filteredLocations = originalLocationsList;
-            } else {
-                filteredLocations = new ArrayList<>();
-                final String lowerCaseQuery = query.toString().toLowerCase();
-                for (int i = 0; i < originalLocationsList.size(); i++) {
-                    final Location location = originalLocationsList.get(i);
-
-                    final String cityName = location.getCityName().toLowerCase();
-                    if (cityName.startsWith(lowerCaseQuery)) {
-                        filteredLocations.add(location);
-                    }
-                }
-
-            }
-
+            final List<Location> filteredLocations = LocationUtils.filter(originalLocationsList, query);
             finalResults.values = filteredLocations;
             finalResults.count = filteredLocations.size();
 

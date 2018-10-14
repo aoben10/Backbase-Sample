@@ -33,6 +33,22 @@ public class Location {
         return id;
     }
 
+    public void setCountry(final String country) {
+        this.country = country;
+    }
+
+    public void setCoord(final Coord coord) {
+        this.coord = coord;
+    }
+
+    public void setCityName(final String cityName) {
+        this.cityName = cityName;
+    }
+
+    public void setId(final int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
