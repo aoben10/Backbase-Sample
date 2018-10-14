@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.Filter;
 import com.google.gson.Gson;
@@ -18,12 +19,15 @@ import com.theobencode.victoroben.backbasesample.models.Location;
 import java.util.Comparator;
 import java.util.List;
 
-public class LocationListFragment extends Fragment implements Filter.FilterListener{
+public class LocationListFragment extends Fragment implements Filter.FilterListener {
 
     FragmentLocationListBinding binding;
     @Nullable
     private Gson gson;
     private LocationRecyclerAdapter locationRecyclerAdapter;
+    public static final String EXTRA_STATE_FILTER_QUERY = "EXTRA_FILTER_QUERY";
+
+    private CharSequence filterQuery;
 
     private static final Comparator<Location> ALPHABETICAL_CITY_NAME_COMPARATOR =
             (location1, location2) -> location1.getCityName().compareTo(location2.getCityName());
@@ -48,6 +52,9 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
                         DividerItemDecoration.VERTICAL));
 
         onCityJsonDataReceived(LocationUtils.getCitiesJsonString());
+        if (savedInstanceState != null) {
+            filterQuery = savedInstanceState.getCharSequence(EXTRA_STATE_FILTER_QUERY);
+        }
     }
 
     private void onCityJsonDataReceived(final String citiesJsonString) {
@@ -68,7 +75,6 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         inflater.inflate(R.menu.menu_main, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String s) {
@@ -77,12 +83,26 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
 
             @Override
             public boolean onQueryTextChange(final String query) {
+                filterQuery = query;
                 locationRecyclerAdapter.getFilter().filter(query, LocationListFragment.this);
                 binding.locationRecyclerView.scrollToPosition(0);
                 return true;
             }
         });
 
+        if (!TextUtils.isEmpty(filterQuery)) {
+            //re-apply filter after restoring state
+            searchView.requestFocus();
+            searchView.setQuery(filterQuery, false);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!TextUtils.isEmpty(filterQuery)) {
+            outState.putCharSequence(EXTRA_STATE_FILTER_QUERY, filterQuery);
+        }
     }
 
     public static LocationListFragment newInstance() {
