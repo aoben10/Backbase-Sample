@@ -1,4 +1,4 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.ui;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import com.theobencode.victoroben.backbasesample.R;
 import com.theobencode.victoroben.backbasesample.databinding.ListItemLocationBinding;
 import com.theobencode.victoroben.backbasesample.models.Location;
 

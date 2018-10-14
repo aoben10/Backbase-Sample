@@ -1,10 +1,11 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import com.theobencode.victoroben.backbasesample.R;
 
 public class MainActivity extends AppCompatActivity {
 

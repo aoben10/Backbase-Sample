@@ -1,4 +1,4 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.ui;
 
 
 import android.databinding.DataBindingUtil;
@@ -17,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.theobencode.victoroben.backbasesample.R;
 import com.theobencode.victoroben.backbasesample.databinding.FragmentMapBinding;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {

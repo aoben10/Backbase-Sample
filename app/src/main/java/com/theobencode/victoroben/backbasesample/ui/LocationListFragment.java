@@ -1,4 +1,4 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.ui;
 
 
 import android.databinding.DataBindingUtil;
@@ -13,6 +13,8 @@ import android.view.*;
 import android.widget.Filter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.theobencode.victoroben.backbasesample.utils.LocationUtils;
+import com.theobencode.victoroben.backbasesample.R;
 import com.theobencode.victoroben.backbasesample.databinding.FragmentLocationListBinding;
 import com.theobencode.victoroben.backbasesample.models.Location;
 

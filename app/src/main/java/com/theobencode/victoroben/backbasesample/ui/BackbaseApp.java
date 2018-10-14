@@ -1,4 +1,4 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.ui;
 
 import android.app.Application;
 

@@ -1,6 +1,7 @@
-package com.theobencode.victoroben.backbasesample;
+package com.theobencode.victoroben.backbasesample.utils;
 
 import android.util.Log;
+import com.theobencode.victoroben.backbasesample.ui.BackbaseApp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +14,7 @@ public class LocationUtils {
     private static final String TAG = LocationUtils.class.getSimpleName();
     private static final String CITIES_JSON_FILE_NAME = "cities.json";
 
-    static String getCitiesJsonString() {
+    public static String getCitiesJsonString() {
         final StringBuilder builder = new StringBuilder();
         String tempStr;
 
