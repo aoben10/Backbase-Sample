@@ -2,8 +2,6 @@ package com.theobencode.victoroben.backbasesample.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 public class Coord {
 
     @SerializedName("lon")
@@ -20,17 +18,26 @@ public class Coord {
         return latitude;
     }
 
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof Coord)) return false;
-        Coord coord = (Coord) o;
-        return Double.compare(coord.longitude, longitude) == 0 &&
-                Double.compare(coord.latitude, latitude) == 0;
+
+        final Coord coord = (Coord) o;
+
+        if (Double.compare(coord.longitude, longitude) != 0) return false;
+        return Double.compare(coord.latitude, latitude) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(longitude, latitude);
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(longitude);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
