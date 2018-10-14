@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.SearchView;
 import android.view.*;
 import android.widget.Filter;
@@ -24,12 +25,8 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
     private Gson gson;
     private LocationRecyclerAdapter locationRecyclerAdapter;
 
-    private static final Comparator<Location> ALPHABETICAL_CITY_NAME_COMPARATOR = new Comparator<Location>() {
-        @Override
-        public int compare(final Location location1, final Location location2) {
-            return location1.getCityName().compareTo(location2.getCityName());
-        }
-    };
+    private static final Comparator<Location> ALPHABETICAL_CITY_NAME_COMPARATOR =
+            (location1, location2) -> location1.getCityName().compareTo(location2.getCityName());
 
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
@@ -46,6 +43,10 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
         gson = new Gson();
         locationRecyclerAdapter = new LocationRecyclerAdapter(ALPHABETICAL_CITY_NAME_COMPARATOR);
         binding.locationRecyclerView.setAdapter(locationRecyclerAdapter);
+        binding.locationRecyclerView
+                .addItemDecoration(new DividerItemDecoration(binding.locationRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL));
+
         onCityJsonDataReceived(LocationUtils.getCitiesJsonString());
     }
 
@@ -57,7 +58,6 @@ public class LocationListFragment extends Fragment implements Filter.FilterListe
             if (locationRecyclerAdapter != null) {
                 locationRecyclerAdapter.setData(locationList);
                 binding.locationListCount.setText(getString(R.string.location_list_size, locationList.size()));
-
             }
         }
         binding.progressCircular.setVisibility(View.GONE);
